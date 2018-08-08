@@ -261,6 +261,14 @@ class Package(object) :
         for f in self.fonts :
             f.build_pyfontaine(bld)
 
+    def build_fontbakery(self, bld) :
+        if 'FONTBAKERY' not in bld.env :
+            Logs.warn("fontbakery not installed. Can't complete. See http://github.com/googlefonts/fontbakery")
+            return
+        self.subrun(bld, lambda p, b: p.build_fontbakery(b))
+        for f in self.fonts :
+            f.build_fontbakery(bld)
+
     def build_start(self, bld) :
         self.subrun(bld, lambda p, b: p.build_start(b))
         for f in self.fonts :
@@ -692,6 +700,10 @@ class fontvalidatorContext(cmdContext) :
 class pyfontaineContext(cmdContext) :
     """Report coverage using pyfontaine. Check the test reports."""
     cmd = 'pyfontaine'
+
+class fontbakeryContext(cmdContext) :
+    """Test fonts using FontBakery. Check <font.targe>-fontbakery.log"""
+    cmd = 'fontbakery'
 
 class crashContext(Context.Context) :
     """Crash and burn with fire"""
